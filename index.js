@@ -248,13 +248,15 @@ var updateReferencesIn = (function() {
     return function(file, options) {
         var template = [
             'background-image: url("<%= spriteSheetPath %>");\n    ',
-            'background-position: -<%= isRetina ? (coordinates.x / retinaRatio) : coordinates.x %>px -<%= isRetina ? (coordinates.y / retinaRatio) : coordinates.y %>px;\n    ',
-            'background-size: <%= isRetina ? (properties.width / retinaRatio) : properties.width %>px <%= isRetina ? (properties.height / retinaRatio) : properties.height %>px!important;'
+            'background-position: -<%= isRetina ? (coordinates.x / retinaRatio) : coordinates.x %>px -<%= isRetina ? (coordinates.y / retinaRatio) : coordinates.y %>px;\n    '
         ].join('');
 
-        if(!!options.setWidthAndHeight) {
-            template += '\n    width: <%= isRetina ? (properties.width / retinaRatio) : properties.width %>px;\n    ';
-            template += 'height: <%= isRetina ? (properties.height / retinaRatio) : properties.height %>px;';
+        if(!!options.iconMode) {
+            //Icon mode
+            template += 'width: <%= isRetina ? (coordinates.width / retinaRatio) : coordinates.width %>px;\n    ';
+            template += 'height: <%= isRetina ? (coordinates.height / retinaRatio) : coordinates.height %>px;';
+        } else {
+            template += 'background-size: <%= isRetina ? (coordinates.width / retinaRatio) : coordinates.width %>px <%= isRetina ? (coordinates.height / retinaRatio) : coordinates.height %>px!important;'
         }
 
         template = _.template(template);
@@ -373,7 +375,7 @@ module.exports = function(options) { 'use strict';
         groupBy:         [],
         accumulate:      false,
         verbose:         false,
-        setWidthAndHeight: false
+        iconMode:        false
     }, options || {});
 
     // check necessary properties
