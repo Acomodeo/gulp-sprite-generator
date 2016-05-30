@@ -1,7 +1,7 @@
 {
   "name": "gulp-sprite-generator",
-  "version": "0.2.3",
-  "description": "Plugin that generate sprites from your stylesheets (using spritesmith) and then updates the references.",
+  "version": "1.0.0",
+  "description": "Plugin that generate sprites from your stylesheets (using spritesmith) and then updates the references. This is a fork by Acomodeo to fix some issues and to introduce icon functionality",
   "main": "index.js",
   "test": "mocha test",
   "keywords": [
@@ -19,8 +19,20 @@
     "email": "gobwas@gmail.com",
     "url": "http://github.com/gobwas"
   },
+  "contributors": [
+      {
+          "name": "Leon Strauss",
+          "email": "leon.strauss@acomodeo.com",
+          "url": "http://github.com/LionC"
+      },
+      {
+          "name": "Mischa Holz",
+          "email": "mischa.holz@acomodeo.com",
+          "url": "http://github.com/mhlz"
+      }
+  ],
   "license": "MIT",
-  "repository": "https://github.com/gobwas/gulp-sprite-generator",
+  "repository": "https://github.com/Acomodeo/gulp-sprite-generator",
   "devDependencies": {
     "mocha": "*",
     "chai": "*",
