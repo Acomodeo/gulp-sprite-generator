@@ -355,7 +355,7 @@ module.exports = function(options) { 'use strict';
 
     options = _.merge({
         src:        [],
-        engine:     "pngsmith", //auto
+        engine:     "pixelsmith", //auto
         algorithm:  "top-down",
         padding:    0,
         engineOpts: {},

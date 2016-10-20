@@ -20,23 +20,23 @@
     "url": "http://github.com/gobwas"
   },
   "contributors": [
-      {
-          "name": "Leon Strauss",
-          "email": "leon.strauss@acomodeo.com",
-          "url": "http://github.com/LionC"
-      },
-      {
-          "name": "Mischa Holz",
-          "email": "mischa.holz@acomodeo.com",
-          "url": "http://github.com/mhlz"
-      }
+    {
+      "name": "Leon Strauss",
+      "email": "leon.strauss@acomodeo.com",
+      "url": "http://github.com/LionC"
+    },
+    {
+      "name": "Mischa Holz",
+      "email": "mischa.holz@acomodeo.com",
+      "url": "http://github.com/mhlz"
+    }
   ],
   "license": "MIT",
   "repository": "https://github.com/Acomodeo/gulp-sprite-generator",
   "devDependencies": {
-    "mocha": "*",
     "chai": "*",
-    "gulp": "*"
+    "gulp": "*",
+    "mocha": "*"
   },
   "scripts": {
     "test": "mocha ./test"
@@ -47,7 +47,7 @@
     "gulp-util": "^2.2.14",
     "lodash": "^2.4.1",
     "q": "^1.0.1",
-    "spritesmith": "^0.18.0",
+    "spritesmith": "^3.1.0",
     "through2": "^0.4.1",
     "vinyl": "^0.2.3"
   }
