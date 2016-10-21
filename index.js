@@ -1,5 +1,5 @@
 var path = require('path'),
-    spritesmith = require('spritesmith'),
+    Spritesmith = require('spritesmith'),
     File = require('vinyl'),
     _ = require('lodash'),
     colors = require('colors'),
