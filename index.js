@@ -1,15 +1,15 @@
-var path        = require('path'),
+var path = require('path'),
     spritesmith = require('spritesmith'),
-    File        = require('vinyl'),
-    _           = require('lodash'),
-    colors      = require('colors'),
-    fs          = require('fs'),
-    gutil       = require('gulp-util'),
-    util        = require("util"),
-    async       = require('async'),
-    Q           = require('q'),
-    through     = require('through2'),
-    Readable    = require('stream').Readable,
+    File = require('vinyl'),
+    _ = require('lodash'),
+    colors = require('colors'),
+    fs = require('fs'),
+    gutil = require('gulp-util'),
+    util = require("util"),
+    async = require('async'),
+    Q = require('q'),
+    through = require('through2'),
+    Readable = require('stream').Readable,
 
     PLUGIN_NAME = "gulp-sprite-generator",
     debug;
@@ -27,10 +27,10 @@ var log = function() {
 var getImages = (function() {
     var httpRegex, imageRegex, filePathRegex, pngRegex, retinaRegex;
 
-    imageRegex    = new RegExp('background-image:[\\s]?url\\(["\']?([\\w\\d\\s!:./\\-\\_@]*\\.[\\w?#]+)["\']?\\)[^;]*\\;(?:\\s*\\/\\*\\s*@meta\\s*(\\{.*\\})\\s*\\*\\/)?', 'ig');
-    retinaRegex   = new RegExp('@(\\d)x\\.[a-z]{3,4}$', 'ig');
-    httpRegex     = new RegExp('http[s]?', 'ig');
-    pngRegex      = new RegExp('\\.png$', 'ig');
+    imageRegex = new RegExp('background-image:[\\s]?url\\(["\']?([\\w\\d\\s!:./\\-\\_@]*\\.[\\w?#]+)["\']?\\)[^;]*\\;(?:\\s*\\/\\*\\s*@meta\\s*(\\{.*\\})\\s*\\*\\/)?', 'ig');
+    retinaRegex = new RegExp('@(\\d)x\\.[a-z]{3,4}$', 'ig');
+    httpRegex = new RegExp('http[s]?', 'ig');
+    pngRegex = new RegExp('\\.png$', 'ig');
     filePathRegex = new RegExp('["\']?([\\w\\d\\s!:./\\-\\_@]*\\.[\\w?#]+)["\']?', 'ig');
 
     return function(file, options) {
@@ -49,43 +49,43 @@ var getImages = (function() {
             var matchOperatorsRe = /[|\\/{}()[\]^$+*?.]/g;
 
             return function(str) {
-                return str.replace(matchOperatorsRe,  '\\$&');
+                return str.replace(matchOperatorsRe, '\\$&');
             }
         })();
 
-        while ((reference = imageRegex.exec(content)) != null) {
-            url   = reference[1];
-            meta  = reference[2];
+        while((reference = imageRegex.exec(content)) != null) {
+            url = reference[1];
+            meta = reference[2];
 
             image = {
                 replacement: new RegExp('background-image:\\s+url\\(\\s?(["\']?)\\s?' + makeRegexp(url) + '\\s?\\1\\s?\\)[^;]*\\;', 'gi'),
-                url:         url,
-                group:       [],
-                isRetina:    false,
+                url: url,
+                group: [],
+                isRetina: false,
                 retinaRatio: 1,
-                meta:        {}
+                meta: {}
             };
 
-            if (httpRegex.test(url)) {
+            if(httpRegex.test(url)) {
                 options.verbose && log(colors.cyan(basename) + ' > ' + url + ' has been skipped as it\'s an external resource!');
                 continue;
             }
 
-            if (!pngRegex.test(url)) {
+            if(!pngRegex.test(url)) {
                 options.verbose && log(colors.cyan(basename) + ' > ' + url + ' has been skipped as it\'s not a PNG!');
                 continue;
             }
 
-            if (meta) {
+            if(meta) {
                 try {
                     meta = JSON.parse(meta);
                     meta.sprite && (image.meta = meta.sprite);
-                } catch (err) {
+                } catch(err) {
                     log(colors.cyan(basename) + ' > ' + colors.white('Can not parse meta json for ' + url) + ': "' + colors.red(err) + '"');
                 }
             }
 
-            if (options.retina && (retina = retinaRegex.exec(url))) {
+            if(options.retina && (retina = retinaRegex.exec(url))) {
                 image.isRetina = true;
                 image.retinaRatio = retina[1];
             }
@@ -121,7 +121,7 @@ var getImages = (function() {
             .value();
 
         return Q(images)
-            // apply user filters
+        // apply user filters
             .then(function(images) {
                 return Q.Promise(function(resolve, reject) {
                     async.reduce(
@@ -139,7 +139,7 @@ var getImages = (function() {
                             );
                         },
                         function(err, images) {
-                            if (err) {
+                            if(err) {
                                 return reject(err);
                             }
 
@@ -158,7 +158,7 @@ var getImages = (function() {
                             async.map(images, function(image, done) {
                                 Q(groupBy(image))
                                     .then(function(group) {
-                                        if (group) {
+                                        if(group) {
                                             image.group.push(group);
                                         }
 
@@ -168,7 +168,7 @@ var getImages = (function() {
                             }, next);
                         },
                         function(err, images) {
-                            if (err) {
+                            if(err) {
                                 return reject(err);
                             }
 
@@ -216,9 +216,11 @@ var callSpriteSmithWith = (function() {
                 });
 
                 // enlarge padding, if its retina
-                if (_.every(images, function(image) {return image.isRetina})) {
+                if(_.every(images, function(image) {
+                        return image.isRetina
+                    })) {
                     ratio = _.chain(images).flatten('retinaRatio').unique().value();
-                    if (ratio.length == 1) {
+                    if(ratio.length == 1) {
                         config.padding = config.padding * ratio[0];
                     }
                 }
@@ -237,8 +239,8 @@ var callSpriteSmithWith = (function() {
 
 
         return Q.all(all).then(function(results) {
-            debug.images+= images.length;
-            debug.sprites+= results.length;
+            debug.images += images.length;
+            debug.sprites += results.length;
             return results;
         });
     }
@@ -281,7 +283,7 @@ var exportSprites = (function() {
 
         group || (group = []);
 
-        if (group.length == 0) {
+        if(group.length == 0) {
             return spriteSheetName;
         }
 
@@ -345,53 +347,52 @@ var mapSpritesProperties = function(images, options) {
     }
 };
 
-module.exports = function(options) { 'use strict';
+module.exports = function(options) {
+    'use strict';
     var stream, styleSheetStream, spriteSheetStream;
 
     debug = {
         sprites: 0,
-        images:  0
+        images: 0
     };
 
     options = _.merge({
-        src:        [],
-        engine:     "pixelsmith", //auto
-        algorithm:  "top-down",
-        padding:    0,
+        src: [],
+        engine: "pixelsmith", //auto
+        algorithm: "top-down",
+        padding: 0,
         engineOpts: {},
-        exportOpts: {
-
-        },
+        exportOpts: {},
         imgOpts: {
             timeout: 30000
         },
 
-        baseUrl:         './',
-        retina:          true,
-        styleSheetName:  null,
+        baseUrl: './',
+        retina: true,
+        styleSheetName: null,
         spriteSheetName: null,
         spriteSheetPath: null,
-        filter:          [],
-        groupBy:         [],
-        accumulate:      false,
-        verbose:         false,
-        iconMode:        false
+        filter: [],
+        groupBy: [],
+        accumulate: false,
+        verbose: false,
+        iconMode: false
     }, options || {});
 
     // check necessary properties
     ['spriteSheetName'].forEach(function(property) {
-        if (!options[property]) {
+        if(!options[property]) {
             throw new gutil.PluginError(PLUGIN_NAME, '`' + property + '` is required');
         }
     });
 
     // prepare filters
-    if (_.isFunction(options.filter)) {
+    if(_.isFunction(options.filter)) {
         options.filter = [options.filter]
     }
 
     // prepare groupers
-    if (_.isFunction(options.groupBy)) {
+    if(_.isFunction(options.groupBy)) {
         options.groupBy = [options.groupBy]
     }
 
@@ -414,9 +415,9 @@ module.exports = function(options) { 'use strict';
     });
 
     // add retina grouper if needed
-    if (options.retina) {
+    if(options.retina) {
         options.groupBy.unshift(function(image) {
-            if (image.isRetina) {
+            if(image.isRetina) {
                 return "@" + image.retinaRatio + "x";
             }
 
@@ -425,7 +426,9 @@ module.exports = function(options) { 'use strict';
     }
 
     // create output streams
-    function noop(){}
+    function noop() {
+    }
+
     styleSheetStream = new Readable({objectMode: true});
     spriteSheetStream = new Readable({objectMode: true});
     spriteSheetStream._read = styleSheetStream._read = noop;
@@ -434,19 +437,19 @@ module.exports = function(options) { 'use strict';
 
     stream = through.obj(
         function(file, enc, done) {
-            if (file.isNull()) {
+            if(file.isNull()) {
                 this.push(file); // Do nothing if no contents
                 return done();
             }
 
-            if (file.isStream()) {
+            if(file.isStream()) {
                 this.emit('error', new gutil.PluginError(PLUGIN_NAME, 'Streams is not supported!'));
                 return done();
             }
 
-            if (file.isBuffer()) {
+            if(file.isBuffer()) {
                 // postpone evaluation, if we accumulating
-                if (options.accumulate) {
+                if(options.accumulate) {
                     accumulatedFiles.push(file);
                     stream.push(file);
                     done();
@@ -459,7 +462,7 @@ module.exports = function(options) { 'use strict';
                             .then(exportSprites(spriteSheetStream, options))
                             .then(mapSpritesProperties(images, options))
                             .then(updateReferencesIn(file, options))
-                            .then(exportStylesheet(styleSheetStream, _.extend({}, options, { styleSheetName: options.styleSheetName || path.basename(file.path) })))
+                            .then(exportStylesheet(styleSheetStream, _.extend({}, options, {styleSheetName: options.styleSheetName || path.basename(file.path)})))
                             .then(function() {
                                 // pipe source file
                                 stream.push(file);
@@ -482,7 +485,7 @@ module.exports = function(options) { 'use strict';
         function(done) {
             var pending;
 
-            if (options.accumulate) {
+            if(options.accumulate) {
                 pending = Q
                     .all(accumulatedFiles.map(function(file) {
                         return getImages(file, options);
@@ -506,12 +509,12 @@ module.exports = function(options) { 'use strict';
                             .then(function(results) {
                                 return Q.all(accumulatedFiles.map(function(file) {
                                     return updateReferencesIn(file, options)(results)
-                                        .then(exportStylesheet(styleSheetStream, _.extend({}, options, { styleSheetName: path.basename(file.path) })));
+                                        .then(exportStylesheet(styleSheetStream, _.extend({}, options, {styleSheetName: path.basename(file.path)})));
                                 }));
-                            });
+                            })
                     })
                     .catch(function(err) {
-                        stream.emit('error', new gutil.PluginError(PLUGIN_NAME, err));
+                        this.emit('error', new gutil.PluginError(PLUGIN_NAME, err));
                         done();
                     });
             } else {
@@ -526,7 +529,11 @@ module.exports = function(options) { 'use strict';
                 log(util.format("Created %d sprite(s) from %d images, saved %s% requests", debug.sprites, debug.images, debug.images > 0 ? ((debug.sprites / debug.images) * 100).toFixed(1) : 0));
 
                 done();
+            }).catch(function(err) {
+                this.emit('error', new gutil.PluginError(PLUGIN_NAME, err));
+                done();
             });
+
         }
     );
 
