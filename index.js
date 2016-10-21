@@ -226,7 +226,6 @@ var callSpriteSmithWith = (function() {
                 }
 
                 return Q.nfcall(Spritesmith.run, config).then(function(result) {
-                    console.log(result);
                     tmp = tmp.split(GROUP_DELIMITER);
                     tmp.shift();
 
@@ -242,7 +241,6 @@ var callSpriteSmithWith = (function() {
         return Q.all(all).then(function(results) {
             debug.images += images.length;
             debug.sprites += results.length;
-            console.dir(results);
             return results;
         });
     }
@@ -353,7 +351,6 @@ module.exports = function(options) {
     'use strict';
     var stream, styleSheetStream, spriteSheetStream;
 
-    console.log("started!!")
 
     debug = {
         sprites: 0,
@@ -489,7 +486,6 @@ module.exports = function(options) {
         function(done) {
             var pending;
 
-            console.dir("flushing")
 
             if(options.accumulate) {
                 pending = Q
