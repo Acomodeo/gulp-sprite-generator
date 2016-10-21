@@ -124,7 +124,7 @@ var getImages = (function() {
         // apply user filters
             .then(function(images) {
                 return Q.Promise(function(resolve, reject) {
-                    async.reduce(
+                    return async.reduce(
                         options.filter,
                         images,
                         function(images, filter, next) {
@@ -151,7 +151,7 @@ var getImages = (function() {
             // apply user group processors
             .then(function(images) {
                 return Q.Promise(function(resolve, reject) {
-                    async.reduce(
+                    return async.reduce(
                         options.groupBy,
                         images,
                         function(images, groupBy, next) {
@@ -225,7 +225,8 @@ var callSpriteSmithWith = (function() {
                     }
                 }
 
-                return Q.nfcall(spritesmith, config).then(function(result) {
+                return Q.nfcall(Spritesmith.run, config).then(function(result) {
+                    console.log(result);
                     tmp = tmp.split(GROUP_DELIMITER);
                     tmp.shift();
 
@@ -241,6 +242,7 @@ var callSpriteSmithWith = (function() {
         return Q.all(all).then(function(results) {
             debug.images += images.length;
             debug.sprites += results.length;
+            console.dir(results);
             return results;
         });
     }
@@ -350,6 +352,8 @@ var mapSpritesProperties = function(images, options) {
 module.exports = function(options) {
     'use strict';
     var stream, styleSheetStream, spriteSheetStream;
+
+    console.log("started!!")
 
     debug = {
         sprites: 0,
@@ -485,6 +489,8 @@ module.exports = function(options) {
         function(done) {
             var pending;
 
+            console.dir("flushing")
+
             if(options.accumulate) {
                 pending = Q
                     .all(accumulatedFiles.map(function(file) {
@@ -512,6 +518,10 @@ module.exports = function(options) {
                                         .then(exportStylesheet(styleSheetStream, _.extend({}, options, {styleSheetName: path.basename(file.path)})));
                                 }));
                             })
+                            .catch(function(err) {
+                                this.emit('error', new gutil.PluginError(PLUGIN_NAME, err));
+                                done();
+                            });
                     })
                     .catch(function(err) {
                         this.emit('error', new gutil.PluginError(PLUGIN_NAME, err));
@@ -537,8 +547,12 @@ module.exports = function(options) {
         }
     );
 
-    stream.css = styleSheetStream;
-    stream.img = spriteSheetStream;
+    stream.css = styleSheetStream.on('error', function(error) {
+        console.err(error)
+    });;
+    stream.img = spriteSheetStream.on('error', function(error) {
+        console.err(error)
+    });;
 
     return stream;
 };
