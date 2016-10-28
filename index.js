@@ -532,7 +532,7 @@ module.exports = function(options) {
                 styleSheetStream.push(null);
                 spriteSheetStream.push(null);
 
-                log(util.format("Created %d sprite(s) from %d images, saved %s% requests", debug.sprites, debug.images, debug.images > 0 ? ((debug.sprites / debug.images) * 100).toFixed(1) : 0));
+                log(util.format("Created %d sprite(s) from %d images, saved %s% requests", debug.sprites, debug.images, debug.images > 0 ? 100 - ((debug.sprites / debug.images) * 100).toFixed(1) : 0));
 
                 done();
             }).catch(function(err) {
